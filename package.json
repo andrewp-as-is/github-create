@@ -1,0 +1,13 @@
+{
+  "name": "github-create",
+  "version": "2019.5.8",
+  "description": "create github repo",
+  "keywords": [
+    "github"
+  ],
+  "homepage": "https://github.com/looking-for-a-job/github-create",
+  "license": "Unlicense",
+  "bin": {
+    "github-create": "./scripts/github-create"
+  }
+}
