@@ -17,7 +17,10 @@ EOF
 # https://developer.github.com/v3/repos/#create
 
 private=false
-[[ $1 == "-p" ]] || [[ $1 == "--private" ]] && { private=true; shift; }
+[[ $# == 2 ]] && {
+    [[ $1 == "-p" ]] || [[ $1 == "--private" ]] && { private=true; shift; }
+    [[ $# == 2 ]] && usage
+}
 
 owner=
 repo=$1
@@ -31,14 +34,14 @@ data="{\"name\":\"$repo\",\"private\":$private}"
 # 1) check user/org registered
 [[ -n "$owner" ]] && {
     url="https://github.com/$owner"
-    curl -fs "$url" || exit
+    curl -fs -o /dev/null "$url" || exit
 
     url="https://github.com/$owner/repo"
     curl -fs -o /dev/null "$url" && echo "SKIP: $url EXISTS" && exit
 }
 
 url="https://api.github.com/user/repos" # POST /user/repos (default)
-[[ -n "$owner" ]] && curl -f -I -o /dev/null https://api.github.com/orgs/"$owner" && {
+[[ -n "$owner" ]] && curl -fs -I -o /dev/null https://api.github.com/orgs/"$owner" && {
     url="https://api.github.com/orgs/$owner/repos" # POST /orgs/:org/repos
 }
 tmp_output="$(mktemp)" || exit
